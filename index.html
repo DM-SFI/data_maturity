@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>אבחון בשלות דאטה - רשויות מקומיות</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #2E3192;
+      --secondary: #00B4D8;
+      --accent: #90E0EF;
+      --success: #52B788;
+      --warning: #F77F00;
+      --danger: #D62828;
+      --dark: #0D1B2A;
+      --gray: #415A77;
+      --light-gray: #E0E1DD;
+      --white: #FFFFFF;
+      --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      color: var(--dark);
+      line-height: 1.6;
+      direction: rtl;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    /* Header */
+    .header {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      animation: slideDown 0.6s ease;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer { 0% { transform: translateX(-100%);} 100% { transform: translateX(100%);} }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-30px);} to { opacity: 1; transform: translateY(0);} }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p { font-size: 1.2rem; color: var(--gray); font-weight: 400; }
+
+    /* Start Screen */
+    .start-screen {
+      text-align: center;
+      padding: 60px 40px;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 40px;
+      animation: zoomIn 0.6s ease;
+    }
+    @keyframes zoomIn { from { opacity: 0; transform: scale(0.8);} to { opacity: 1; transform: scale(1);} }
+
+    .start-screen h2 { font-size: 2rem; color: var(--primary); margin-bottom: 20px; font-weight: 700; }
+    .start-screen p { font-size: 1.2rem; color: var(--gray); margin-bottom: 30px; line-height: 1.8; }
+
+    /* Progress Bar */
+    .progress-container {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: var(--card-shadow);
+      animation: slideUp 0.8s ease;
+      display:none;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px);} to { opacity: 1; transform: translateY(0);} }
+
+    .progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .progress-bar { background: var(--light-gray); height: 12px; border-radius: 10px; overflow: hidden; position: relative; }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      position: relative;
+      box-shadow: 0 2px 10px rgba(46, 49, 146, 0.3);
+    }
+    .progress-fill::after {
+      content: '';
+      position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shine 2s infinite;
+    }
+    @keyframes shine { 0% { transform: translateX(-100%);} 100% { transform: translateX(100%);} }
+
+    /* Section Card */
+    .section-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 35px;
+      margin-bottom: 30px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+      animation: fadeIn 0.6s ease;
+      display:none;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95);} to { opacity: 1; transform: scale(1);} }
+    .section-card:hover { transform: translateY(-5px); box-shadow: var(--hover-shadow); }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid var(--accent);
+    }
+
+    .section-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      border-radius: 50%;
+      margin-left: 15px;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    /* Questions */
+    .question {
+      margin-bottom: 25px;
+      padding: 20px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border-radius: 15px;
+      border-right: 4px solid var(--accent);
+      transition: all 0.3s ease;
+    }
+    .question:hover {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
+      transform: translateX(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 12px;
+      line-height: 1.7;
+    }
+
+    .hint {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 12px;
+      font-size: 0.95rem;
+      color: var(--gray);
+      border-right: 3px solid var(--secondary);
+      animation: slideIn 0.4s ease;
+    }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(20px);} to { opacity: 1; transform: translateX(0);} }
+
+    /* Binary (Yes/No) Buttons */
+    .binary-container {
+      display: inline-flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .binary-btn {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 2px solid var(--light-gray);
+      background: var(--white);
+      cursor: pointer;
+      font-weight: 800;
+      transition: all 0.25s ease;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .binary-btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--secondary);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+
+    .binary-btn.selected-yes {
+      background: linear-gradient(135deg, var(--success), #3aa66f);
+      color: var(--white);
+      border-color: var(--success);
+      box-shadow: 0 8px 20px rgba(82, 183, 136, 0.35);
+    }
+
+    .binary-btn.selected-no {
+      background: linear-gradient(135deg, var(--danger), #c51f1f);
+      color: var(--white);
+      border-color: var(--danger);
+      box-shadow: 0 8px 20px rgba(214, 40, 40, 0.30);
+    }
+
+    /* Scale Questions */
+    .scale-container { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 15px; }
+
+    .scale-button {
+      width: 60px; height: 60px;
+      border: 2px solid var(--light-gray);
+      background: var(--white);
+      border-radius: 12px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .scale-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      border-color: var(--secondary);
+    }
+    .scale-button.selected {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      border-color: var(--primary);
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(46, 49, 146, 0.3);
+    }
+
+    .scale-labels {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: var(--gray);
+      font-weight: 700;
+    }
+
+    /* Radio Questions */
+    .radio-container { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background: var(--white);
+      border: 2px solid var(--light-gray);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 700;
+    }
+    .radio-option:hover {
+      background: linear-gradient(135deg, rgba(144, 224, 239, 0.1), rgba(0, 180, 216, 0.05));
+      border-color: var(--secondary);
+      transform: translateX(-5px);
+    }
+    .radio-option.selected {
+      background: linear-gradient(135deg, rgba(46, 49, 146, 0.1), rgba(0, 180, 216, 0.1));
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(46, 49, 146, 0.2);
+    }
+
+    .radio-circle {
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--gray);
+      border-radius: 50%;
+      margin-left: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      flex: 0 0 auto;
+    }
+    .radio-option.selected .radio-circle { border-color: var(--primary); }
+    .radio-option.selected .radio-circle::after {
+      content: '';
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+    }
+
+    /* Results Section */
+    .results-section {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 20px;
+      padding: 40px;
+      margin-top: 40px;
+      color: var(--white);
+      box-shadow: 0 15px 40px rgba(46, 49, 146, 0.3);
+      display: none;
+      animation: bounceIn 0.8s ease;
+    }
+    @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.8);} 50% { transform: scale(1.05);} 100% { opacity: 1; transform: scale(1);} }
+    .results-section.show { display: block; }
+
+    .results-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    @media (min-width: 900px) {
+      .score-grid { grid-template-columns: 1fr 1.1fr; align-items: stretch; }
+    }
+
+    .score-container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 26px;
+      text-align: center;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .total-score {
+      font-size: 4rem;
+      font-weight: 900;
+      margin-bottom: 6px;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .score-label { font-size: 1.3rem; font-weight: 700; opacity: 0.95; }
+
+    .maturity-level {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 18px;
+      margin-top: 14px;
+      text-align: center;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .level-badge {
+      display: inline-block;
+      padding: 10px 26px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .level-description { font-size: 1.05rem; line-height: 1.7; opacity: 0.98; }
+
+    /* Radar Card */
+    .radar-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    .radar-title { font-size: 1.25rem; font-weight: 900; margin-bottom: 10px; text-align: center; }
+    .radar-wrap { width: 100%; display: flex; justify-content: center; align-items: center; }
+    .radar-sub { text-align: center; opacity: 0.95; margin-top: 8px; font-size: 0.95rem; font-weight: 700; }
+
+    /* Categories Breakdown */
+    .categories-breakdown { margin-top: 26px; }
+    .categories-breakdown h3 { margin-bottom: 14px; font-size: 1.4rem; font-weight: 900; }
+
+    .category-item {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; }
+    .category-name { font-size: 1.05rem; font-weight: 900; }
+    .category-score { font-size: 1.2rem; font-weight: 900; white-space: nowrap; }
+
+    .category-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 10px;
+      opacity: 0.98;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.22);
+      font-weight: 900;
+      font-size: 0.92rem;
+    }
+
+    .category-feedback {
+      margin-top: 8px;
+      line-height: 1.7;
+      font-size: 1rem;
+      opacity: 0.98;
+      font-weight: 600;
+    }
+
+    .category-bar { background: rgba(255, 255, 255, 0.2); height: 8px; border-radius: 10px; overflow: hidden; }
+    .category-fill {
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.85));
+      border-radius: 10px;
+      transition: width 1s ease;
+    }
+
+    /* Insights (per questions) */
+    .insights-toggle {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-weight: 900;
+      color: rgba(255,255,255,0.95);
+      user-select: none;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.22);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .insights-toggle:hover { transform: translateY(-1px); background: rgba(255,255,255,0.18); }
+
+    .insights-panel {
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.20);
+      display: none;
+    }
+    .insights-panel.show { display: block; }
+
+    .insight-item {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      margin-bottom: 10px;
+    }
+    .insight-q {
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+    .insight-a {
+      opacity: 0.95;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .insight-t {
+      opacity: 0.98;
+      font-weight: 600;
+      line-height: 1.7;
+    }
+
+    /* Buttons */
+    .button-container { display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+
+    .btn {
+      padding: 15px 35px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      box-shadow: 0 4px 15px rgba(46, 49, 146, 0.3);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(46, 49, 146, 0.4); }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--primary);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--success), #52B788);
+      color: var(--white);
+      box-shadow: 0 4px 15px rgba(82, 183, 136, 0.3);
+    }
+    .btn-success:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(82, 183, 136, 0.4); }
+
+    .icon { font-size: 1.2rem; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 1.8rem; }
+      .section-title { font-size: 1.4rem; }
+      .scale-container { justify-content: space-between; }
+      .scale-button { width: 50px; height: 50px; font-size: 1.1rem; }
+      .btn { padding: 12px 25px; font-size: 1rem; }
+      .total-score { font-size: 3rem; }
+      .button-container { flex-direction: column; }
+      .binary-btn { min-width: 46%; flex: 1; }
+    }
+
+    /* Print Styles */
+    @media print {
+      body { background: white; }
+      .btn, .button-container { display: none !important; }
+      .section-card { page-break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+      .question:hover { transform: none; box-shadow: none; }
+      .results-section { color: #111; background: white; box-shadow: none; border: 1px solid #ddd; }
+      .insights-toggle, .insights-panel { display:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎯 כלי אבחון בשלות דאטה ארגונית</h1>
+      <p>כלי דיגיטלי לבדיקת רמת הבשלות של עבודה מבוססת נתונים ברשות המקומית</p>
+    </div>
+
+    <div id="startScreen" class="start-screen">
+      <h2>ברוכים הבאים לכלי האבחון</h2>
+      <p>
+        כלי זה יעזור לכם להעריך את רמת הבשלות של אסטרטגיית הנתונים ועבודה מבוססת נתונים ברשות.<br>
+        השאלון כולל מספר קטגוריות ולוקח כ-10 דקות למילוי.
+      </p>
+      <button class="btn btn-primary" onclick="startAssessment()">
+        <span class="icon">🚀</span>
+        התחל אבחון
+      </button>
+    </div>
+
+    <div id="progressContainer" class="progress-container">
+      <div class="progress-info">
+        <span style="font-weight: 900;">התקדמות במילוי</span>
+        <span id="progressText">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill" style="width:0%;"></div>
+      </div>
+    </div>
+
+    <div id="questionsContainer"></div>
+
+    <div id="resultsSection" class="results-section">
+      <h2 class="results-title">📊 תוצאות האבחון</h2>
+
+      <div class="score-grid">
+        <div>
+          <div class="score-container">
+            <div id="totalScore" class="total-score">0%</div>
+            <div class="score-label">ציון כולל</div>
+
+            <div class="maturity-level">
+              <div id="levelBadge" class="level-badge">רמת בשלות</div>
+              <p id="levelDescription" class="level-description"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="radar-card">
+          <div class="radar-title">ויזואליזציה כוללת לפי ממדים (רדאר)</div>
+          <div class="radar-wrap">
+            <div id="radarContainer"></div>
+          </div>
+          <div class="radar-sub">התרשים מציג את אחוז הבשלות בכל ממד (0%–100%).</div>
+        </div>
+      </div>
+
+      <div class="categories-breakdown">
+        <h3>פירוט לפי ממדים</h3>
+        <div id="categoriesResults"></div>
+      </div>
+
+      <div class="button-container">
+        <button class="btn btn-secondary" onclick="printResults()">
+          <span class="icon">🖨️</span>
+          הדפס תוצאות
+        </button>
+        <button class="btn btn-success" onclick="exportResults()">
+          <span class="icon">📥</span>
+          ייצא לאקסל
+        </button>
+        <button class="btn btn-primary" onclick="restartAssessment()">
+          <span class="icon">🔄</span>
+          התחל מחדש
+        </button>
+      </div>
+    </div>
+
+    <div id="navigationButtons" class="button-container" style="display:none;">
+      <button id="prevBtn" class="btn btn-secondary" onclick="previousSection()">
+        <span class="icon">→</span>
+        חזור
+      </button>
+      <button id="nextBtn" class="btn btn-primary" onclick="nextSection()">
+        המשך
+        <span class="icon">←</span>
+      </button>
+      <button id="finishBtn" class="btn btn-success" onclick="showResults()" style="display:none;">
+        <span class="icon">✅</span>
+        סיים וצפה בתוצאות
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================
+    // DATA (כולל כללי ניקוד + משוב "רק כשצריך")
+    // =========================================================
+    // שדות נתמכים לשאלה:
+    // - type: "checkbox" | "scale" | "radio" | "section"
+    // - reverse: true  (לשאלות דירוג שהניקוד הפוך: ציון = 6 - דירוג)
+    // - feedbackByAnswer: { 1: "..." , 2:"..." } לרדיו
+    // - lowFeedback: "..." + lowThreshold: number (לסקאלה)
+    // - trigger: function(value, ctx) -> { text, answerText } | null  (מתקדם)
+    // - idHint: תיאור קצר לשימוש ביצוא/דיבוג (אופציונלי)
+
+    const assessmentData = [
+      {
+        title: "מטרות, יעדים ושאלות",
+        questions: [
+          {
+            text: "האם יש לרשות אסטרטגיה (תיאוריית שינוי) סדורה הכוללת:?",
+            type: "section",
+            // משוב ברמת הקבוצה (אם פחות משתי תיבות קיימות)
+            groupTrigger: (values /* array of 0/1 */) => {
+              const countYes = values.reduce((a,b)=>a+(b===1?1:0),0);
+              if (countYes < 2) {
+                return "תיאוריית שינוי סדורה היא הבסיס לעבודה מבוססת נתונים: הגדירו מטרות, תוצאות (השינוי בפועל) ופעולות, וחברו ביניהן בקשר של \"אם... אז...\".";
+              }
+              return null;
+            },
+            subQuestions: [
+              {
+                text: "מטרות הרשות",
+                type: "checkbox",
+                hint: "מטרות הן הדבר שהתכנית מבקשת להשיג - החזון הגדול",
+              },
+              {
+                text: "התוצאות שהיא שואפת להשיג",
+                type: "checkbox",
+                hint: "התוצאות הן השינוי בפועל בקרב האוכלוסיה",
+              },
+              {
+                text: "הפעולות שנוקטים והאופן שבו יביאו להשגת התוצאות",
+                type: "checkbox",
+                hint: "הפעולות הן הדרכים שבהן תפעלו כדי להשיג את התוצאות",
+              }
+            ]
+          },
+          {
+            text: "באיזו מידה (1= כלל לא, 5= במידה רבה מאוד) אתם משתמשים בנתונים כדי:",
+            type: "section",
+            subQuestions: [
+              {
+                text: "להבין את הבעיה איתה מבקשים להתמודד?",
+                type: "scale",
+                hint: "כדאי לבחון נתונים באשר להיקף הבעיה ומאפייניה",
+                lowThreshold: 3,
+                lowFeedback:
+                  "כדאי לבחון נתונים באשר להיקף הבעיה, שכיחותה, האוכלוסיות המושפעות, ההשלכות החברתיות והכלכליות שלה וצורות הביטוי שלה."
+              },
+              {
+                text: "ללמוד על התושבים והסביבה ברשות?",
+                type: "scale",
+                hint: "נתונים יעזרו לכם להבין טוב יותר את צרכי התושבים",
+                lowThreshold: 3,
+                lowFeedback:
+                  "נתונים יעזרו לכם להבין טוב יותר את המציאות והצרכים. אתרו מקורות מידע (למ\"ס, ממשלה, מחקר, רשויות אחרות ועוד) ושלבו אותם בתכנון."
+              },
+              {
+                text: "להחליט מה הן הפעולות שהרשות תבצע וכיצד נכון לבצען?",
+                type: "scale",
+                lowThreshold: 3,
+                lowFeedback:
+                  "כדי לדייק פעולות, השתמשו בנתונים על חסמים, מאפיינים ויעילות התערבויות קיימות, ובנו חלופות פעולה מבוססות ראיות."
+              },
+              {
+                text: "למדוד תוצאות/אימפקט?",
+                type: "scale",
+                lowThreshold: 3,
+                lowFeedback:
+                  "הגדירו מדדים ואספו נתונים בנקודות זמן שונות כדי לעקוב אחר תוצאות והשפעה, ולאפשר למידה ושיפור מתמיד."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        title: "כלים ותשתיות",
+        questions: [
+          {
+            text: "איך נאספים הנתונים בארגון?",
+            type: "radio",
+            options: [
+              "בעיקר במסמכי נייר/וורד",
+              "בעיקר בטפסים מקוונים וקבצי אקסל",
+              "בעיקר באמצעות מערכת/ות מידע ייעודית (למשל CRM)"
+            ],
+            // משוב לפי בחירה (כמו באיפיון)
+            feedbackByAnswer: {
+              1: "יש לבנות כלי איסוף דיגיטליים שיאפשרו גישה לנתונים וניתוח שלהם.",
+              2: "יש לבחון האם שיטות אלה מתאימות להיקף הנתונים ומורכבותם, והאם הן מאפשרות משילות נתונים מספקת.",
+              3: "מומלץ להסב כלי איסוף למערכות ייעודיות, לצורך שמירה על משילות הנתונים ואיכותם והרחבת אפשרויות הניתוח והשימוש."
+            }
+          },
+          {
+            text: "איפה נשמרים ומנוהלים רוב הנתונים?",
+            type: "radio",
+            options: [
+              "בתיקיות האישיות/במחשבים של העובדים",
+              "בתיקיות משותפות",
+              "במאגר נתונים ייעודי/מערכות מידע"
+            ],
+            feedbackByAnswer: {
+              1: "מומלץ לעבור לשמירה בשירות ענן מאובטח ובתיקיות משותפות כדי לאפשר שימוש ארגוני בנתונים ולהבטיח גיבוי ושחזור במקרה כשל.",
+              2: "יש לבחון האם שיטות אלה מתאימות להיקף הנתונים ומורכבותם, והאם הן מאפשרות משילות נתונים מספקת.",
+              3: "מומלץ לשמור ולנהל נתונים במערכות ייעודיות ו/או במסד נתונים מסודר, לצורך שמירה על משילות הנתונים ואיכותם."
+            }
+          },
+          {
+            text: "באיזו מידה מערכות המידע שלכם מתאימות לצרכי הרשות?",
+            type: "scale",
+            hint: "1 = כלל לא מתאימות, 5 = מתאימות מאוד",
+            lowThreshold: 3,
+            lowFeedback:
+              "בחנו את צרכי מערכות המידע בצורה מסודרת לאור המטרות והפעילות, הגדירו תכנית לשדרוג מערכות קיימות, יישום מערכות חדשות ותיאום ביניהן."
+          },
+          {
+            text: "באיזו מידה יש ריבוי מערכות וקושי בסנכרון נתונים?",
+            type: "scale",
+            hint: "1 = אין בעיה כלל, 5 = בעיה חמורה",
+            reverse: true,                 // ✅ היפוך נקודות: דירוג 1 => 5 נק', דירוג 5 => 1 נק'
+            // טריגר למשוב כאשר הבעיה מורגשת (דירוג גבוה)
+            trigger: (value) => {
+              if (value >= 3) {
+                return {
+                  text: "בחנו את תהליכי העבודה ומערך הנתונים: אתרו כפילויות ואי-התאמות ובנו תכנית לצמצום כפילויות, לאחידות בנתונים ולתקשורת בין מערכות.",
+                };
+              }
+              return null;
+            }
+          },
+          {
+            text: "כיצד אתם מפיקים ומנגישים נתונים ודוחות?",
+            type: "radio",
+            options: [
+              "אנחנו לא מפיקים דוחות",
+              "במסמכים ומצגות",
+              "בדוחות מובנים המבוססים על אקסל או גוגל שיטס",
+              "במערכת BI או דאשבורדים אינטראקטיביים"
+            ],
+            feedbackByAnswer: {
+              1: "דוחות הם כלי יעיל להטמעת עבודה מבוססת נתונים. התחילו בזיהוי שגרות עבודה ונתונים קיימים, והפיקו דוחות בסיסיים (גם באקסל).",
+              2: "מסמכים ומצגות טובים להצגה בסיסית, אך לא מאפשרים שימוש חוזר וניתוח. מומלץ לעבד נתונים ולהפיק דוחות בגליון אלקטרוני או BI.",
+              3: "אקסל הוא כלי טוב לעיבוד נתונים. אם הנתונים רבים/מורכבים, בחנו BI להצלבות וניתוחים מתקדמים יותר.",
+              4: "" // אם כבר BI/דשבורדים, לא חייבים משוב (אפשר להשאיר ריק)
+            }
+          }
+        ]
+      },
+      {
+        title: "איכות הנתונים",
+        questions: [
+          {
+            text: "עד כמה (1=כלל לא, 5=במידה רבה מאוד) הנתונים שיש לכם:",
+            type: "section",
+            subQuestions: [
+              { text: "מדויקים ואמינים?", type: "scale", lowThreshold: 3, lowFeedback: "בחנו אילו נתונים אינם מהימנים ומה יוצר את הפער. שפרו דרכי איסוף/שמירה כדי לייצג נכון את המציאות." },
+              { text: "עדכניים?", type: "scale", lowThreshold: 3, lowFeedback: "הגדירו תדירות עדכון ותהליכי תחזוקה (אחריות, תזכורות, אוטומציות) לשמירה על עדכניות." },
+              { text: "שלמים (מכסים את כל מה שצריך)?", type: "scale", lowThreshold: 3, lowFeedback: "הגדירו איזה נתונים חיוניים, ושפרו תהליכי איסוף כך שיכסו את רוב הפעילות/האוכלוסייה הרלוונטית." },
+              { text: "נגישים וזמינים למי שצריך אותם?", type: "scale", lowThreshold: 3, lowFeedback: "כדי להשתמש בנתונים, אפשרו גישה למנהלים ולעובדים הרלוונטיים (תיקיות שיתופיות/דוחות/דשבורדים) והגדירו הרשאות." }
+            ]
+          }
+        ]
+      },
+      {
+        title: "תרבות ארגונית",
+        questions: [
+          {
+            text: "עד כמה יש בארגון תרבות של קבלת החלטות מבוססת נתונים?",
+            type: "scale",
+            hint: "1 = כלל לא, 5 = תרבות חזקה מאוד",
+            lowThreshold: 4,
+            lowFeedback: "כדי לבסס תרבות נתונים, התחילו משילוב נתונים בשגרות קיימות (ישיבות, תכנון, סיכומים) והובלה ודוגמה אישית של מנהלים."
+          },
+          { text: "עד כמה העובדים מיומנים בעבודה עם נתונים?", type: "scale", lowThreshold: 4, lowFeedback: "השקיעו בהכשרות קצרות ומעשיות בהתאם לתפקיד (קריאה, ניתוח בסיסי, הצגה ושימוש בתובנות)." },
+          { text: "האם יש אחראי/צוות ייעודי לנושא הנתונים ברשות?", type: "checkbox", trigger: (v)=> (v===0 ? ({text:"מינוי גורם מוביל לנושא הנתונים (גם בהיקף חלקי) מסייע להטמעה, סטנדרטים ושגרות."}) : null) },
+          { text: "עד כמה ההנהלה תומכת ומעודדת שימוש בנתונים?", type: "scale", lowThreshold: 4, lowFeedback: "הנהלה יכולה לחזק שימוש בנתונים באמצעות דרישה לשקיפות, הצגת נתונים בדיונים ותמיכה בזמן/כלים." }
+        ]
+      },
+      {
+        title: "פרטיות ואבטחה",
+        questions: [
+          { text: "האם קיימת מדיניות ברורה לאבטחת מידע ופרטיות?", type: "checkbox", trigger: (v)=> (v===0 ? ({text:"מומלץ לנסח מדיניות בסיסית, נהלים והרשאות, ולהדריך עובדים על עקרונות אבטחת מידע ופרטיות."}) : null) },
+          { text: "עד כמה העובדים מכירים ופועלים לפי נהלי אבטחת המידע?", type: "scale", lowThreshold: 4, lowFeedback: "בצעו הדרכות ורענונים תקופתיים, והטמיעו נהלים פשוטים וברורים לשימוש בכלים ולניהול הרשאות." },
+          { text: "האם מתבצעות ביקורות תקופתיות על אבטחת המידע?", type: "checkbox", trigger: (v)=> (v===0 ? ({text:"כדאי לקיים ביקורות תקופתיות (גם בסיסיות) לזיהוי סיכונים, הרשאות חריגות ותיקון תקלות."}) : null) }
+        ]
+      },
+      {
+        title: "שיתופי פעולה",
+        questions: [
+          { text: "עד כמה יש שיתוף נתונים בין מחלקות בתוך הרשות?", type: "scale", lowThreshold: 4, lowFeedback: "הגדירו פורמטים ושגרות שיתוף נתונים בין יחידות (דוחות תקופתיים, תיקיות משותפות, פגישות סטטוס מבוססות נתונים)." },
+          { text: "האם יש שיתופי פעולה עם גורמים חיצוניים בנושא נתונים?", type: "checkbox", hint: "למשל: ממשלה, רשויות אחרות, אקדמיה, מגזר שלישי", trigger: (v)=> (v===0 ? ({text:"שיתופי פעולה יכולים להעשיר נתונים ותובנות. שקלו שותפויות עם גופים ציבוריים/אקדמיה/רשויות אחרות."}) : null) },
+          { text: "עד כמה הנתונים שקופים ונגישים לתושבים?", type: "scale", lowThreshold: 4, lowFeedback: "בחנו אילו נתונים ניתן לפרסם באופן בטוח ושקוף, ובאילו ערוצים (אתר, דוחות פתוחים, לוחות מחוונים ציבוריים)." }
+        ]
+      }
+    ];
+
+    // =========================================================
+    // STATE
+    // =========================================================
+    let currentSectionIndex = 0;
+    let answers = {}; // id -> number (scale/radio), 1/0 (binary), undefined if not answered
+
+    // =========================================================
+    // INIT / NAV
+    // =========================================================
+    document.addEventListener('DOMContentLoaded', init);
+
+    function init() {
+      renderQuestions();
+      updateProgress();
+    }
+
+    function startAssessment() {
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('progressContainer').style.display = 'block';
+      document.getElementById('navigationButtons').style.display = 'flex';
+      showSection(0);
+    }
+
+    function showSection(index) {
+      const sections = document.querySelectorAll('.section-card');
+      sections.forEach((section, i) => section.style.display = (i === index ? 'block' : 'none'));
+
+      currentSectionIndex = index;
+
+      document.getElementById('prevBtn').style.display = index === 0 ? 'none' : 'inline-flex';
+      document.getElementById('nextBtn').style.display = index === assessmentData.length - 1 ? 'none' : 'inline-flex';
+      document.getElementById('finishBtn').style.display = index === assessmentData.length - 1 ? 'inline-flex' : 'none';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextSection() {
+      if (currentSectionIndex < assessmentData.length - 1) showSection(currentSectionIndex + 1);
+    }
+
+    function previousSection() {
+      if (currentSectionIndex > 0) showSection(currentSectionIndex - 1);
+    }
+
+    // =========================================================
+    // RENDER QUESTIONS
+    // =========================================================
+    function renderQuestions() {
+      const container = document.getElementById('questionsContainer');
+      container.innerHTML = '';
+
+      assessmentData.forEach((section, sectionIndex) => {
+        const sectionCard = document.createElement('div');
+        sectionCard.className = 'section-card';
+        sectionCard.id = `section-${sectionIndex}`;
+
+        const sectionTitle = document.createElement('div');
+        sectionTitle.className = 'section-title';
+        sectionTitle.innerHTML = `<span class="section-number">${sectionIndex + 1}</span>${section.title}`;
+        sectionCard.appendChild(sectionTitle);
+
+        section.questions.forEach((question, questionIndex) => {
+          const questionDiv = createQuestion(question, `${sectionIndex}-${questionIndex}`);
+          sectionCard.appendChild(questionDiv);
+        });
+
+        container.appendChild(sectionCard);
+      });
+    }
+
+    function createQuestion(question, id) {
+      const questionDiv = document.createElement('div');
+      questionDiv.className = 'question';
+
+      // Section (title + sub questions)
+      if (question.type === 'section' && question.subQuestions) {
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'question-text';
+        titleDiv.textContent = question.text;
+        questionDiv.appendChild(titleDiv);
+
+        question.subQuestions.forEach((subQ, subIndex) => {
+          const subDiv = createQuestion(subQ, `${id}-${subIndex}`);
+          questionDiv.appendChild(subDiv);
+        });
+
+        return questionDiv;
+      }
+
+      // Regular question
+      const textDiv = document.createElement('div');
+      textDiv.className = 'question-text';
+      textDiv.textContent = question.text;
+      questionDiv.appendChild(textDiv);
+
+      // Checkbox -> binary buttons
+      if (question.type === 'checkbox') {
+        const binary = document.createElement('div');
+        binary.className = 'binary-container';
+
+        const yesBtn = document.createElement('button');
+        yesBtn.type = 'button';
+        yesBtn.className = 'binary-btn';
+        yesBtn.id = `bin-${id}-yes`;
+        yesBtn.textContent = 'קיים';
+        yesBtn.onclick = () => setBinary(id, 1);
+
+        const noBtn = document.createElement('button');
+        noBtn.type = 'button';
+        noBtn.className = 'binary-btn';
+        noBtn.id = `bin-${id}-no`;
+        noBtn.textContent = 'לא קיים';
+        noBtn.onclick = () => setBinary(id, 0);
+
+        binary.appendChild(yesBtn);
+        binary.appendChild(noBtn);
+        questionDiv.appendChild(binary);
+
+      } else if (question.type === 'scale') {
+        const scaleContainer = document.createElement('div');
+        scaleContainer.className = 'scale-container';
+
+        for (let i = 1; i <= 5; i++) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'scale-button';
+          button.id = `scale-${id}-${i}`;
+          button.textContent = i;
+          button.onclick = () => selectScale(id, i);
+          scaleContainer.appendChild(button);
+        }
+
+        questionDiv.appendChild(scaleContainer);
+
+        const labels = document.createElement('div');
+        labels.className = 'scale-labels';
+        labels.innerHTML = '<span>כלל לא</span><span>במידה רבה מאוד</span>';
+        questionDiv.appendChild(labels);
+
+      } else if (question.type === 'radio' && question.options) {
+        const radioContainer = document.createElement('div');
+        radioContainer.className = 'radio-container';
+
+        question.options.forEach((option, optIndex) => {
+          const radioOption = document.createElement('div');
+          radioOption.className = 'radio-option';
+          radioOption.id = `radio-${id}-${optIndex}`;
+          radioOption.onclick = () => selectRadio(id, optIndex);
+
+          const circle = document.createElement('div');
+          circle.className = 'radio-circle';
+
+          const label = document.createElement('span');
+          label.textContent = option;
+
+          radioOption.appendChild(circle);
+          radioOption.appendChild(label);
+          radioContainer.appendChild(radioOption);
+        });
+
+        questionDiv.appendChild(radioContainer);
+      }
+
+      if (question.hint) {
+        const hint = document.createElement('div');
+        hint.className = 'hint';
+        hint.innerHTML = `<strong>💡 טיפ:</strong> ${question.hint}`;
+        questionDiv.appendChild(hint);
+      }
+
+      return questionDiv;
+    }
+
+    // =========================================================
+    // ANSWERS HANDLERS
+    // =========================================================
+    function setBinary(id, value) {
+      answers[id] = value;
+
+      const yes = document.getElementById(`bin-${id}-yes`);
+      const no = document.getElementById(`bin-${id}-no`);
+      if (yes && no) {
+        yes.classList.remove('selected-yes');
+        no.classList.remove('selected-no');
+        if (value === 1) yes.classList.add('selected-yes');
+        if (value === 0) no.classList.add('selected-no');
+      }
+      updateProgress();
+    }
+
+    function selectScale(id, value) {
+      for (let i = 1; i <= 5; i++) {
+        const button = document.getElementById(`scale-${id}-${i}`);
+        if (button) button.classList.remove('selected');
+      }
+      const selectedButton = document.getElementById(`scale-${id}-${value}`);
+      if (selectedButton) selectedButton.classList.add('selected');
+
+      answers[id] = value;
+      updateProgress();
+    }
+
+    function selectRadio(id, optionIndex) {
+      const el = document.getElementById(`radio-${id}-${optionIndex}`);
+      if (!el) return;
+
+      const container = el.parentElement;
+      const allOptions = container.querySelectorAll('.radio-option');
+      allOptions.forEach(opt => opt.classList.remove('selected'));
+
+      el.classList.add('selected');
+      answers[id] = optionIndex + 1; // score 1..N
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const totalQuestions = getTotalQuestions();
+      const answeredQuestions = Object.values(answers).filter(v => v !== undefined).length;
+      const progress = totalQuestions === 0 ? 0 : Math.round((answeredQuestions / totalQuestions) * 100);
+
+      document.getElementById('progressText').textContent = `${progress}%`;
+      document.getElementById('progressFill').style.width = `${progress}%`;
+    }
+
+    function getTotalQuestions() {
+      let total = 0;
+      assessmentData.forEach(section => {
+        section.questions.forEach(question => {
+          if (question.type === 'section' && question.subQuestions) total += question.subQuestions.length;
+          else total++;
+        });
+      });
+      return total;
+    }
+
+    // =========================================================
+    // SCORING (כולל reverse)
+    // =========================================================
+    function scoreScale(value, reverse) {
+      if (!value) return 0;
+      if (!reverse) return value;        // 1..5
+      return 6 - value;                  // ✅ היפוך נקודות: 1->5, 2->4, 3->3, 4->2, 5->1
+    }
+
+    function calculateScores() {
+      let totalScore = 0;
+      let maxScore = 0;
+      const categoryScores = {};
+
+      assessmentData.forEach((section, sectionIndex) => {
+        let sectionScore = 0;
+        let sectionMax = 0;
+
+        section.questions.forEach((question, questionIndex) => {
+          if (question.type === 'section' && question.subQuestions) {
+            question.subQuestions.forEach((subQ, subIndex) => {
+              const id = `${sectionIndex}-${questionIndex}-${subIndex}`;
+              const raw = answers[id] ?? 0;
+
+              if (subQ.type === 'checkbox') {
+                sectionScore += raw; sectionMax += 1;
+              } else if (subQ.type === 'scale') {
+                sectionScore += scoreScale(raw, !!subQ.reverse);
+                sectionMax += 5;
+              }
+            });
+          } else {
+            const id = `${sectionIndex}-${questionIndex}`;
+            const raw = answers[id] ?? 0;
+
+            if (question.type === 'checkbox') {
+              sectionScore += raw; sectionMax += 1;
+            } else if (question.type === 'scale') {
+              sectionScore += scoreScale(raw, !!question.reverse);
+              sectionMax += 5;
+            } else if (question.type === 'radio') {
+              sectionScore += raw;
+              sectionMax += question.options.length;
+            }
+          }
+        });
+
+        categoryScores[section.title] = {
+          score: sectionScore,
+          max: sectionMax,
+          percentage: sectionMax > 0 ? Math.round((sectionScore / sectionMax) * 100) : 0,
+        };
+
+        totalScore += sectionScore;
+        maxScore += sectionMax;
+      });
+
+      return {
+        total: totalScore,
+        max: maxScore,
+        percentage: maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0,
+        categories: categoryScores,
+      };
+    }
+
+    // =========================================================
+    // MATURITY LEVELS (לפי האיפיון): <=30 בסיסית, 31-69 מתפתחת, >=70 מתקדמת
+    // =========================================================
+    function getMaturityLevelByPercent(pct) {
+      if (pct >= 70) {
+        return {
+          level: "מתקדמת",
+          color: "#52B788",
+          emoji: "🟢",
+          description: "רמת בשלות מתקדמת: יש תשתית ותהליכי עבודה שמאפשרים שימוש עקבי בנתונים לצורך תכנון, ניהול ושיפור."
+        };
+      }
+      if (pct >= 31) {
+        return {
+          level: "מתפתחת",
+          color: "#F77F00",
+          emoji: "🟠",
+          description: "רמת בשלות מתפתחת: יש בסיס קיים, אך יש פערים משמעותיים שחוסמים מימוש מלא של הפוטנציאל. מומלץ להתמקד בשיפור ממוקד לפי ממדים חלשים."
+        };
+      }
+      return {
+        level: "בסיסית",
+        color: "#D62828",
+        emoji: "🔴",
+        description: "רמת בשלות בסיסית: התשתיות/שגרות עדיין לא מספיק מגובשות. זהו שלב טוב להנחת יסודות ברורים: תהליכים, אחריות, וכלים."
+      };
+    }
+
+    // =========================================================
+    // DIMENSION FEEDBACK (קצר לממד) + INSIGHTS (לפי שאלות רק כשצריך)
+    // =========================================================
+    function getDimensionFeedback(name, pct) {
+      const m = getMaturityLevelByPercent(pct);
+
+      const byName = {
+        "מטרות, יעדים ושאלות": {
+          basic: "כדאי לחדד מטרות, תוצאות ופעולות ולהגדיר שאלות מפתח. זה יאפשר לבנות מדדים ולהבין אילו נתונים צריך.",
+          dev: "יש בסיס, מומלץ לחזק חיבור בין פעולות לתוצאות ולהרחיב שימוש בנתונים בתכנון, יישום ומדידת תוצאות.",
+          adv: "היסודות חזקים. מומלץ להעמיק במדדים, תדירות מדידה ולמידה שוטפת מנתונים."
+        },
+        "כלים ותשתיות": {
+          basic: "מומלץ לחזק איסוף דיגיטלי, שמירה מסודרת ונגישות נתונים, ולהתחיל בדוחות בסיסיים.",
+          dev: "קיימות תשתיות, כדאי לשפר סנכרון בין מערכות, נגישות, ודיווח שוטף.",
+          adv: "תשתית טובה. מומלץ לייצב משילות (סטנדרטים, הרשאות) ולהרחיב שימוש בדוחות/דשבורדים."
+        },
+        "איכות הנתונים": {
+          basic: "כדאי להתחיל בהגדרות בסיס: מה הנתון הנכון, איך אוספים, ומה תוקף/שלמות נדרשים.",
+          dev: "יש בסיס, מומלץ להגדיר בדיקות איכות (שלמות/עדכניות/דיוק) ולהכניס תיקון שיטתי לבעיות חוזרות.",
+          adv: "איכות טובה. מומלץ ליישם ניטור איכות קבוע ולהגדיר אחריות ברורה על תחזוקת נתונים."
+        },
+        "תרבות ארגונית": {
+          basic: "מומלץ להכניס שגרות של דיון בנתונים ותמיכת הנהלה, ולהגדיר גורם מוביל/תהליך ברור.",
+          dev: "יש תנועה חיובית. מומלץ לחזק מיומנויות והטמעה: הכשרות קצרות, דוגמה אישית של הנהלה, ותיעוד החלטות מבוסס נתונים.",
+          adv: "תרבות חזקה יחסית. מומלץ להרחיב עבודה מבוססת נתונים לעוד תהליכים ולשמר בעזרת שגרות קבועות."
+        },
+        "פרטיות ואבטחה": {
+          basic: "מומלץ לנסח מדיניות בסיסית, להדריך עובדים, ולהגדיר נהלי אבטחת מידע מינימליים.",
+          dev: "יש בסיס, כדאי לעבור לתהליכי בקרה תקופתיים והטמעה עקבית של נהלים.",
+          adv: "ניהול טוב. מומלץ לבצע ביקורות/רענונים שוטפים ולהתאים נהלים לשינויים בתהליכים ובמערכות."
+        },
+        "שיתופי פעולה": {
+          basic: "מומלץ להתחיל בשיתוף פנימי בין מחלקות ולהגדיר סטנדרט בסיסי לשיתוף/שקיפות נתונים.",
+          dev: "יש שיתופי פעולה, כדאי להרחיב סטנדרטים ולחזק שקיפות לתושבים בהתאם למדיניות.",
+          adv: "שיתוף מתקדם. מומלץ למנף ללמידה בין-מחלקתית ושיתופי פעולה חיצוניים שמייצרים ערך."
+        }
+      };
+
+      const entry = byName[name];
+      let feedback = m.description;
+      if (entry) {
+        if (m.level === "בסיסית") feedback = entry.basic;
+        if (m.level === "מתפתחת") feedback = entry.dev;
+        if (m.level === "מתקדמת") feedback = entry.adv;
+      }
+
+      return { ...m, feedback };
+    }
+
+    // "תיאור תשובה" לתצוגה בתובנות
+    function formatAnswerForInsight(question, rawValue) {
+      if (question.type === "checkbox") return rawValue === 1 ? "קיים" : "לא קיים";
+      if (question.type === "scale") return `${rawValue}/5`;
+      if (question.type === "radio") return question.options?.[rawValue - 1] ?? "";
+      return "";
+    }
+
+    // הפקת תובנות ממוקדות לשאלה אחת (רק כשצריך)
+    function getQuestionInsight(question, rawValue, ctx) {
+      // אם לא נענה בפועל (undefined) – לא מציגים
+      if (rawValue === undefined) return null;
+
+      // 1) trigger פונקציונלי
+      if (typeof question.trigger === "function") {
+        const res = question.trigger(rawValue, ctx);
+        if (res && res.text) return { text: res.text };
+      }
+
+      // 2) רדיו: משוב לפי תשובה, אבל רק אם קיים טקסט
+      if (question.type === "radio" && question.feedbackByAnswer) {
+        const t = question.feedbackByAnswer[rawValue];
+        if (t && String(t).trim().length > 0) return { text: t };
+      }
+
+      // 3) סקאלה: משוב אם מתחת לסף
+      if (question.type === "scale" && question.lowThreshold && question.lowFeedback) {
+        if (rawValue < question.lowThreshold) return { text: question.lowFeedback };
+      }
+
+      // 4) בינארי: אם "לא קיים" ויש lowFeedback
+      if (question.type === "checkbox" && question.lowFeedback) {
+        if (rawValue === 0) return { text: question.lowFeedback };
+      }
+
+      return null;
+    }
+
+    // הפקת תובנות לפי ממד: מחזירים רק "חריגות"
+    function buildInsightsForSection(sectionIndex) {
+      const section = assessmentData[sectionIndex];
+      const insights = [];
+
+      section.questions.forEach((question, questionIndex) => {
+        // שאלת section (עם תת-שאלות)
+        if (question.type === "section" && question.subQuestions) {
+          const subValues = [];
+          const subInsights = [];
+
+          question.subQuestions.forEach((subQ, subIndex) => {
+            const id = `${sectionIndex}-${questionIndex}-${subIndex}`;
+            const rawValue = answers[id]; // undefined if not answered
+            subValues.push(rawValue ?? 0);
+
+            const ins = getQuestionInsight(subQ, rawValue, { sectionIndex, questionIndex, subIndex });
+            if (ins) {
+              subInsights.push({
+                q: subQ.text,
+                a: formatAnswerForInsight(subQ, rawValue),
+                t: ins.text
+              });
+            }
+          });
+
+          // טריגר קבוצתי (למשל: תיאוריית שינוי - פחות מ2 "כן")
+          if (typeof question.groupTrigger === "function") {
+            // כאן אנחנו משתמשים בערכים הבינאריים (0/1). אם לא נענה - נחשב 0.
+            const clean = question.subQuestions.map((_, subIndex) => {
+              const id = `${sectionIndex}-${questionIndex}-${subIndex}`;
+              return (answers[id] ?? 0);
+            });
+            const groupText = question.groupTrigger(clean);
+            if (groupText) {
+              subInsights.unshift({
+                q: question.text,
+                a: `סומנו ${clean.reduce((a,b)=>a+(b===1?1:0),0)} מתוך ${clean.length} רכיבים`,
+                t: groupText
+              });
+            }
+          }
+
+          insights.push(...subInsights);
+          return;
+        }
+
+        // שאלה רגילה
+        const id = `${sectionIndex}-${questionIndex}`;
+        const rawValue = answers[id];
+        const ins = getQuestionInsight(question, rawValue, { sectionIndex, questionIndex });
+
+        if (ins) {
+          insights.push({
+            q: question.text,
+            a: formatAnswerForInsight(question, rawValue),
+            t: ins.text
+          });
+        }
+      });
+
+      return insights;
+    }
+
+    // =========================================================
+    // RESULTS
+    // =========================================================
+    function showResults() {
+      const scores = calculateScores();
+      const overall = getMaturityLevelByPercent(scores.percentage);
+
+      // Hide questions and nav
+      document.getElementById('questionsContainer').style.display = 'none';
+      document.getElementById('navigationButtons').style.display = 'none';
+      document.getElementById('progressContainer').style.display = 'none';
+
+      // Show results
+      const resultsSection = document.getElementById('resultsSection');
+      resultsSection.classList.add('show');
+
+      document.getElementById('totalScore').textContent = `${scores.percentage}%`;
+
+      const levelBadge = document.getElementById('levelBadge');
+      levelBadge.textContent = `רמת בשלות כוללת: ${overall.level}`;
+      levelBadge.style.background = `linear-gradient(135deg, ${overall.color}, ${overall.color}dd)`;
+      document.getElementById('levelDescription').textContent = overall.description;
+
+      // Categories with per-question insights (collapsed)
+      const categoriesContainer = document.getElementById('categoriesResults');
+      categoriesContainer.innerHTML = '';
+
+      const radarLabels = [];
+      const radarValues = [];
+
+      assessmentData.forEach((section, sectionIndex) => {
+        const data = scores.categories[section.title];
+        const info = getDimensionFeedback(section.title, data.percentage);
+
+        radarLabels.push(section.title);
+        radarValues.push(data.percentage);
+
+        // Build insights only for gaps
+        const insights = buildInsightsForSection(sectionIndex);
+        const insightsCount = insights.length;
+
+        const item = document.createElement('div');
+        item.className = 'category-item';
+
+        const insightsId = `insights-${sectionIndex}`;
+
+        item.innerHTML = `
+          <div class="category-header">
+            <span class="category-name">${escapeHtml(section.title)}</span>
+            <span class="category-score">${data.percentage}%</span>
+          </div>
+
+          <div class="category-meta">
+            <span class="pill">${info.emoji} בשלות ${escapeHtml(info.level)}</span>
+            <span class="pill">ניקוד: ${data.score} / ${data.max}</span>
+          </div>
+
+          <div class="category-bar">
+            <div class="category-fill" style="width: ${data.percentage}%"></div>
+          </div>
+
+          <div class="category-feedback">${escapeHtml(info.feedback)}</div>
+
+          ${insightsCount > 0 ? `
+            <div class="insights-toggle" onclick="toggleInsights('${insightsId}', this)">
+              <span class="icon">▼</span>
+              הצג תובנות לפי שאלות (${insightsCount})
+            </div>
+            <div id="${insightsId}" class="insights-panel">
+              ${insights.map((it, idx) => `
+                <div class="insight-item">
+                  <div class="insight-q">${idx+1}) ${escapeHtml(it.q)}</div>
+                  <div class="insight-a">תשובה: ${escapeHtml(it.a)}</div>
+                  <div class="insight-t">→ ${escapeHtml(it.t)}</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : `
+            <div class="insights-toggle" style="opacity:0.8; cursor:default;" title="אין תובנות חריגות בממד זה">
+              <span class="icon">✓</span>
+              אין תובנות חריגות בממד זה
+            </div>
+          `}
+        `;
+
+        categoriesContainer.appendChild(item);
+      });
+
+      // Radar
+      renderRadarChart('radarContainer', radarLabels, radarValues);
+
+      resultsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleInsights(id, el) {
+      const panel = document.getElementById(id);
+      if (!panel) return;
+
+      const isOpen = panel.classList.toggle('show');
+      const icon = el.querySelector('.icon');
+      if (icon) icon.textContent = isOpen ? '▲' : '▼';
+      el.childNodes.forEach(n => {
+        if (n.nodeType === 3) return;
+      });
+      // עדכון טקסט
+      const txt = el.textContent;
+      if (isOpen) el.innerHTML = `<span class="icon">▲</span> הסתר תובנות לפי שאלות`;
+      else {
+        // מחזירים את הספירה מתוך id
+        const sectionIndex = parseInt(String(id).split('-')[1], 10);
+        const count = buildInsightsForSection(sectionIndex).length;
+        el.innerHTML = `<span class="icon">▼</span> הצג תובנות לפי שאלות (${count})`;
+      }
+    }
+
+    // =========================================================
+    // RADAR SVG (no external libs)
+    // =========================================================
+    function renderRadarChart(containerId, labels, values) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const N = labels.length;
+      const size = 360;
+      const cx = size / 2;
+      const cy = size / 2;
+      const radius = 130;
+
+      const points = [];
+      for (let i = 0; i < N; i++) {
+        const angle = (-Math.PI / 2) + (2 * Math.PI * i / N);
+        const r = radius * (Math.max(0, Math.min(100, values[i])) / 100);
+        const x = cx + r * Math.cos(angle);
+        const y = cy + r * Math.sin(angle);
+        points.push([x, y]);
+      }
+
+      const rings = [20, 40, 60, 80, 100];
+
+      const labelPos = [];
+      for (let i = 0; i < N; i++) {
+        const angle = (-Math.PI / 2) + (2 * Math.PI * i / N);
+        const x = cx + (radius + 28) * Math.cos(angle);
+        const y = cy + (radius + 28) * Math.sin(angle);
+        labelPos.push([x, y, angle]);
+      }
+
+      const polygonPoints = points.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+
+      const axes = [];
+      for (let i = 0; i < N; i++) {
+        const angle = (-Math.PI / 2) + (2 * Math.PI * i / N);
+        const x2 = cx + radius * Math.cos(angle);
+        const y2 = cy + radius * Math.sin(angle);
+        axes.push(`<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>`);
+      }
+
+      const ringPolys = rings.map(pct => {
+        const r = radius * (pct / 100);
+        const ringPts = [];
+        for (let i = 0; i < N; i++) {
+          const angle = (-Math.PI / 2) + (2 * Math.PI * i / N);
+          ringPts.push(`${(cx + r * Math.cos(angle)).toFixed(1)},${(cy + r * Math.sin(angle)).toFixed(1)}`);
+        }
+        return `<polygon points="${ringPts.join(' ')}" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>`;
+      }).join('');
+
+      const labelsSvg = labels.map((txt, i) => {
+        const [x, y, angle] = labelPos[i];
+        const anchor =
+          (Math.cos(angle) > 0.25) ? 'start' :
+          (Math.cos(angle) < -0.25) ? 'end' : 'middle';
+        return `
+          <text x="${x}" y="${y}" fill="rgba(255,255,255,0.95)" font-size="12" font-weight="900" text-anchor="${anchor}">
+            ${escapeHtml(txt)}
+          </text>
+        `;
+      }).join('');
+
+      const dots = points.map((p, i) => `
+        <circle cx="${p[0]}" cy="${p[1]}" r="4" fill="rgba(255,255,255,0.95)"/>
+        <text x="${p[0] + 6}" y="${p[1] - 6}" fill="rgba(255,255,255,0.95)" font-size="12" font-weight="900">
+          ${Math.round(values[i])}%
+        </text>
+      `).join('');
+
+      const svg = `
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="Radar chart">
+          <defs>
+            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="rgba(0,0,0,0.25)"/>
+            </filter>
+          </defs>
+
+          ${ringPolys}
+          ${axes.join('')}
+
+          <polygon points="${polygonPoints}"
+                   fill="rgba(255,255,255,0.22)"
+                   stroke="rgba(255,255,255,0.85)"
+                   stroke-width="2"
+                   filter="url(#shadow)"/>
+
+          ${dots}
+          ${labelsSvg}
+        </svg>
+      `;
+
+      container.innerHTML = svg;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    // =========================================================
+    // EXPORT / PRINT / RESTART
+    // =========================================================
+    function printResults() { window.print(); }
+
+    function exportResults() {
+      const scores = calculateScores();
+      const overall = getMaturityLevelByPercent(scores.percentage);
+
+      let csvContent = "\uFEFF";
+      csvContent += "תוצאות אבחון בשלות דאטה\n\n";
+      csvContent += `תאריך,${new Date().toLocaleDateString('he-IL')}\n`;
+      csvContent += `ציון כולל,${scores.percentage}%\n`;
+      csvContent += `רמת בשלות כוללת,${overall.level}\n\n`;
+      csvContent += "ממד,ציון,רמת בשלות,הסבר קצר,מספר תובנות\n";
+
+      assessmentData.forEach((section, idx) => {
+        const data = scores.categories[section.title];
+        const info = getDimensionFeedback(section.title, data.percentage);
+        const insights = buildInsightsForSection(idx);
+        const brief = String(info.feedback).replace(/\s+/g, ' ').trim();
+
+        csvContent += `${section.title},${data.percentage}%,${info.level},"${brief.replaceAll('"','""')}",${insights.length}\n`;
+      });
+
+      csvContent += "\n";
+      csvContent += "תובנות לפי שאלות (רק חריגות)\n";
+      csvContent += "ממד,שאלה,תשובה,תובנה\n";
+
+      assessmentData.forEach((section, idx) => {
+        const insights = buildInsightsForSection(idx);
+        insights.forEach(it => {
+          csvContent += `"${section.title.replaceAll('"','""')}","${it.q.replaceAll('"','""')}","${it.a.replaceAll('"','""')}","${it.t.replaceAll('"','""')}"\n`;
+        });
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `אבחון_בשלות_דאטה_${new Date().toLocaleDateString('he-IL')}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function restartAssessment() {
+      if (!confirm('האם אתה בטוח שברצונך להתחיל מחדש? כל התשובות יימחקו.')) return;
+
+      answers = {};
+      currentSectionIndex = 0;
+
+      document.getElementById('resultsSection').classList.remove('show');
+      document.getElementById('startScreen').style.display = 'block';
+      document.getElementById('questionsContainer').style.display = 'block';
+      document.getElementById('progressContainer').style.display = 'none';
+      document.getElementById('navigationButtons').style.display = 'none';
+
+      // Clear UI selections
+      document.querySelectorAll('.scale-button').forEach(btn => btn.classList.remove('selected'));
+      document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+      document.querySelectorAll('.binary-btn').forEach(btn => {
+        btn.classList.remove('selected-yes');
+        btn.classList.remove('selected-no');
+      });
+
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
