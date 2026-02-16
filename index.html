@@ -229,7 +229,21 @@
     }
 
     /* Scale Questions */
-    .scale-container { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 15px; }
+    
+    .scale-group {
+    display: inline-flex;
+    flex-direction: column;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 15px;
+    }
+
+  .scale-group .scale-labels {
+  width: 100%;
+  }
+
+  .scale-container { display: flex; gap: 12px; flex-wrap: nowrap; }
+
 
     .scale-button {
       width: 60px; height: 60px;
@@ -543,7 +557,7 @@
     @media (max-width: 768px) {
       .header h1 { font-size: 1.8rem; }
       .section-title { font-size: 1.4rem; }
-      .scale-container { justify-content: space-between; }
+      .scale-container { justify-content: flex-start; }
       .scale-button { width: 50px; height: 50px; font-size: 1.1rem; }
       .btn { padding: 12px 25px; font-size: 1rem; }
       .total-score { font-size: 3rem; }
