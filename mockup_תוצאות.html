@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מצפן בשלות דאטה — מוקאפ מסך תוצאות</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Heebo', sans-serif; background: #F5F4F0; color: #2C2C2A; min-height: 100vh; padding: 2rem 1rem; }
+  .container { max-width: 780px; margin: 0 auto; }
+
+  .page-title { font-size: 13px; color: #888780; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; }
+  .page-title strong { color: #2C2C2A; font-weight: 500; }
+
+  .switcher { margin-bottom: 1.5rem; }
+  .switcher p { font-size: 12px; color: #888780; margin-bottom: 8px; }
+  .switcher-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .switcher-btns button { font-family: 'Heebo', sans-serif; font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 1px solid #D3D1C7; background: #fff; color: #5F5E5A; cursor: pointer; transition: all 0.15s; }
+  .switcher-btns button:hover { background: #F1EFE8; }
+
+  .card { background: #fff; border: 1px solid #E8E6E0; border-radius: 14px; padding: 1.1rem 1.25rem; margin-bottom: 1rem; }
+
+  .header-card { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 8px; }
+  .header-card .org-name { font-size: 18px; font-weight: 500; }
+  .header-card .org-meta { font-size: 12px; color: #888780; margin-top: 4px; }
+  .header-card .date-info { font-size: 12px; color: #B4B2A9; text-align: left; }
+
+  .scores-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+  .score-card { background: #F5F4F0; border-radius: 10px; padding: 1rem; text-align: center; }
+  .score-label { font-size: 11px; color: #888780; margin-bottom: 4px; letter-spacing: 0.02em; }
+  .score-value { font-size: 32px; font-weight: 500; }
+  .score-level { font-size: 11px; color: #888780; margin-top: 3px; }
+  .score-divider { border: none; border-top: 1px solid #E8E6E0; margin: 8px 0 6px; }
+  .score-peer { font-size: 11px; color: #B4B2A9; }
+  .score-peer span { color: #5F5E5A; font-weight: 500; }
+  .bar-track { position: relative; height: 5px; background: #fff; border-radius: 3px; margin: 5px 4px 0; }
+  .bar-peer { position: absolute; top: 0; left: 0; height: 100%; border-radius: 3px; }
+  .bar-you { position: absolute; top: -3px; height: 11px; width: 3px; border-radius: 2px; }
+  .bar-labels { display: flex; justify-content: space-between; margin: 3px 4px 0; font-size: 10px; color: #B4B2A9; }
+
+  .main-grid { display: grid; grid-template-columns: 210px 1fr; gap: 12px; margin-bottom: 1rem; align-items: start; }
+  .matrix-card { padding: 0.85rem; }
+  .matrix-card p { font-size: 11px; color: #888780; text-align: center; margin-bottom: 6px; }
+  .matrix-card svg { display: block; width: 100%; }
+  .matrix-peer-legend { font-size: 10px; color: #B4B2A9; text-align: center; margin-top: 5px; }
+
+  .quadrant-badge { display: inline-block; font-size: 11px; padding: 3px 11px; border-radius: 8px; margin-bottom: 8px; font-weight: 500; }
+  .quadrant-desc { font-size: 13px; line-height: 1.7; color: #2C2C2A; margin-bottom: 10px; }
+  .recs-label { font-size: 11px; font-weight: 500; color: #888780; margin-bottom: 5px; }
+  .recs-list { font-size: 12.5px; line-height: 1.95; color: #2C2C2A; padding-right: 16px; }
+  .recs-list li { margin-bottom: 1px; }
+
+  .dims-section { }
+  .dims-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .dims-hint { font-size: 11px; color: #B4B2A9; margin-bottom: 12px; }
+  .dims-axis-label { font-size: 11px; color: #888780; font-weight: 500; margin-bottom: 7px; }
+  .dims-divider { border: none; border-top: 1px solid #E8E6E0; margin: 10px 0; }
+
+  .dim-row { cursor: pointer; margin-bottom: 6px; }
+  .dim-row-inner { display: grid; grid-template-columns: 140px 1fr 42px 18px; align-items: center; gap: 8px; }
+  .dim-name { font-size: 11.5px; color: #5F5E5A; text-align: right; }
+  .dim-track { background: #F5F4F0; border-radius: 3px; height: 7px; overflow: hidden; }
+  .dim-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .dim-pct { font-size: 11px; font-weight: 500; text-align: left; }
+  .dim-arrow { font-size: 12px; color: #B4B2A9; transition: transform 0.15s; }
+  .dim-tip { display: none; background: #F5F4F0; border-radius: 8px; padding: 8px 12px; margin-top: 4px; margin-right: 2px; }
+  .dim-tip p { font-size: 11px; font-weight: 500; color: #888780; margin-bottom: 4px; }
+  .dim-tip ul { font-size: 11.5px; line-height: 1.85; color: #2C2C2A; padding-right: 14px; }
+
+  .footer-note { font-size: 11px; color: #B4B2A9; text-align: center; margin-top: 1.5rem; padding-bottom: 1rem; }
+
+  @media (max-width: 560px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .scores-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="page-title">
+    <span>🧭</span>
+    <span><strong>מצפן בשלות דאטה</strong> — מוקאפ מסך תוצאות (לדיון פנימי)</span>
+  </div>
+
+  <div class="switcher">
+    <p>בחרו ריבוע לדוגמה:</p>
+    <div class="switcher-btns">
+      <button id="btn-ll" onclick="setQ('ll')">מניח יסודות</button>
+      <button id="btn-hl" onclick="setQ('hl')">דיגיטלי ללא כיוון</button>
+      <button id="btn-lh" onclick="setQ('lh')">אסטרטג ללא כלים</button>
+      <button id="btn-hh" onclick="setQ('hh')">מנהיג דאטה ★</button>
+    </div>
+  </div>
+
+  <div class="card header-card">
+    <div>
+      <div class="org-name">עמותת קהילת העתיד</div>
+      <div class="org-meta">ארגון חברתי · 20–50 עובדים · חינוך ורווחה</div>
+    </div>
+    <div class="date-info">
+      <div>17 במאי 2026</div>
+      <div style="margin-top:3px;">ד"ר רונית לוי, מנהל"ת</div>
+    </div>
+  </div>
+
+  <div class="scores-grid">
+    <div class="score-card">
+      <div class="score-label">ציר דיגיטל</div>
+      <div id="ds" class="score-value" style="color:#185FA5;">42%</div>
+      <div id="dl" class="score-level">מתפתח</div>
+      <hr class="score-divider">
+      <div class="score-peer">ארגונים דומים: <span id="dpeer">48%</span></div>
+      <div class="bar-track">
+        <div id="dbar-peer" class="bar-peer" style="background:#B5D4F4; width:48%;"></div>
+        <div id="dbar-you" class="bar-you" style="background:#185FA5; left:42%;"></div>
+      </div>
+      <div class="bar-labels"><span>0%</span><span style="color:#185FA5; font-weight:500;">אתם</span><span>100%</span></div>
+    </div>
+    <div class="score-card">
+      <div class="score-label">ציר דאטה</div>
+      <div id="das" class="score-value" style="color:#0F6E56;">68%</div>
+      <div id="dal" class="score-level">מתפתח</div>
+      <hr class="score-divider">
+      <div class="score-peer">ארגונים דומים: <span id="dapeer">41%</span></div>
+      <div class="bar-track">
+        <div id="dabar-peer" class="bar-peer" style="background:#9FE1CB; width:41%;"></div>
+        <div id="dabar-you" class="bar-you" style="background:#0F6E56; left:68%;"></div>
+      </div>
+      <div class="bar-labels"><span>0%</span><span style="color:#0F6E56; font-weight:500;">אתם</span><span>100%</span></div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="card matrix-card">
+      <p>מיקום במטריצה</p>
+      <svg viewBox="0 0 200 200">
+        <rect x="16" y="16" width="84" height="84" rx="5" fill="#E1F5EE"/>
+        <rect x="100" y="16" width="84" height="84" rx="5" fill="#E6F1FB"/>
+        <rect x="16" y="100" width="84" height="84" rx="5" fill="#F1EFE8"/>
+        <rect x="100" y="100" width="84" height="84" rx="5" fill="#FAEEDA"/>
+        <line x1="100" y1="14" x2="100" y2="186" stroke="#D3D1C7" stroke-width="0.75"/>
+        <line x1="14" y1="100" x2="186" y2="100" stroke="#D3D1C7" stroke-width="0.75"/>
+        <text x="58" y="52" text-anchor="middle" font-size="8.5" fill="#085041" font-family="Heebo,sans-serif">אסטרטג</text>
+        <text x="58" y="63" text-anchor="middle" font-size="8.5" fill="#085041" font-family="Heebo,sans-serif">ללא כלים</text>
+        <text x="142" y="52" text-anchor="middle" font-size="8.5" fill="#0C447C" font-family="Heebo,sans-serif">מנהיג</text>
+        <text x="142" y="63" text-anchor="middle" font-size="8.5" fill="#0C447C" font-family="Heebo,sans-serif">דאטה ★</text>
+        <text x="58" y="147" text-anchor="middle" font-size="8.5" fill="#5F5E5A" font-family="Heebo,sans-serif">מניח</text>
+        <text x="58" y="158" text-anchor="middle" font-size="8.5" fill="#5F5E5A" font-family="Heebo,sans-serif">יסודות</text>
+        <text x="142" y="147" text-anchor="middle" font-size="8.5" fill="#633806" font-family="Heebo,sans-serif">דיגיטלי</text>
+        <text x="142" y="158" text-anchor="middle" font-size="8.5" fill="#633806" font-family="Heebo,sans-serif">ללא כיוון</text>
+        <text x="100" y="10" text-anchor="middle" font-size="7" fill="#B4B2A9" font-family="Heebo,sans-serif">דאטה גבוהה</text>
+        <text x="100" y="197" text-anchor="middle" font-size="7" fill="#B4B2A9" font-family="Heebo,sans-serif">דאטה נמוכה</text>
+        <text x="5" y="103" text-anchor="middle" font-size="7" fill="#B4B2A9" font-family="Heebo,sans-serif" transform="rotate(-90 5 103)">דיגיטל נמוך</text>
+        <text x="195" y="103" text-anchor="middle" font-size="7" fill="#B4B2A9" font-family="Heebo,sans-serif" transform="rotate(90 195 103)">דיגיטל גבוה</text>
+        <g id="peer-dots"></g>
+        <circle id="dot-ring" cx="58" cy="68" r="11" fill="none" stroke="#0F6E56" stroke-width="2" opacity="0.3"/>
+        <circle id="dot" cx="58" cy="68" r="6.5" fill="#0F6E56"/>
+        <text id="dot-label" x="58" y="57" text-anchor="middle" font-size="7.5" font-weight="500" fill="#085041" font-family="Heebo,sans-serif">אתם</text>
+      </svg>
+      <div class="matrix-peer-legend">● ארגונים דומים</div>
+    </div>
+
+    <div class="card">
+      <div id="qbadge" class="quadrant-badge">אסטרטג ללא כלים</div>
+      <p id="qdesc" class="quadrant-desc"></p>
+      <div class="recs-label">3 המלצות לשלב הבא:</div>
+      <ul id="recs" class="recs-list"></ul>
+    </div>
+  </div>
+
+  <div class="card dims-section">
+    <div class="dims-title">פירוט לפי ממדים</div>
+    <div class="dims-hint">לחצו על ממד לקבלת המלצה קונקרטית</div>
+    <div class="dims-axis-label">ציר דיגיטל</div>
+    <div id="dig-bars"></div>
+    <div class="dims-divider"></div>
+    <div class="dims-axis-label">ציר דאטה</div>
+    <div id="dat-bars"></div>
+  </div>
+
+  <div class="footer-note">מוקאפ לדיון פנימי · SFI מצפן בשלות דאטה · 2026</div>
+</div>
+
+<script>
+const Q = {
+  ll: { d:28, da:22, dp:48, dap:41, dotX:50, dotY:152, dotLabelY:142,
+    name:'מניח יסודות', bg:'#F1EFE8', col:'#444441', dotCol:'#888780',
+    desc:'רוב העבודה מתבצעת בצורה ידנית. הנתונים מפוזרים בקבצי Excel ו-Word ואין שגרת עבודה מסודרת עם מידע.',
+    recs:['הגדרת "שאלת הנתון" המרכזית — מה הכי חשוב למדוד?','בחירת מערכת אחת מרכזית לניהול הארגון','קביעת שגרת דיווח חודשי פשוטה פנים-ארגונית'],
+    peers:[[42,142],[55,158],[38,160],[62,148],[45,155]],
+    dd:[18,35,22,28,10], dad:[15,20,35,18,25,10] },
+  hl: { d:71, da:24, dp:48, dap:41, dotX:152, dotY:152, dotLabelY:142,
+    name:'דיגיטלי ללא כיוון', bg:'#FAEEDA', col:'#633806', dotCol:'#BA7517',
+    desc:'יש לכם מערכות דיגיטליות טובות — CRM, BI ועוד. אבל הנתונים לא מנוצלים לקבלת החלטות ותרבות הדאטה עדיין חלשה.',
+    recs:['מינוי אחראי/ת נתונים — גם במשרה חלקית','הגדרת 3 מדדי ליבה שעולים בכל דיון ניהולי','הכשרת הצוות בקריאת דוחות מהמערכות הקיימות'],
+    peers:[[140,140],[160,160],[148,155],[168,145],[155,168]],
+    dd:[78,65,72,68,55], dad:[20,28,18,30,22,15] },
+  lh: { d:38, da:72, dp:48, dap:41, dotX:50, dotY:62, dotLabelY:52,
+    name:'אסטרטג ללא כלים', bg:'#E1F5EE', col:'#085041', dotCol:'#0F6E56',
+    desc:'יש לכם תרבות דאטה טובה ומודעות ברורה לחשיבות נתונים, אך התשתית הדיגיטלית לא תומכת בה. הנתונים מפוזרים, האיסוף ידני, ואין מערכת שמחברת בין המידע.',
+    recs:['הכנסת מערכת CRM / ניהול מוטבים מרכזית','חיבור מקורות המידע הקיימים למקום אחד','בניית שגרת עדכון נתונים קבועה'],
+    peers:[[42,75],[62,55],[35,80],[55,68],[48,58]],
+    dd:[42,28,38,45,20], dad:[78,65,72,68,75,60] },
+  hh: { d:78, da:81, dp:48, dap:41, dotX:152, dotY:55, dotLabelY:45,
+    name:'מנהיג דאטה ★', bg:'#E6F1FB', col:'#0C447C', dotCol:'#185FA5',
+    desc:'הארגון ברמה גבוהה בשני הצירים. יש תשתית דיגיטלית חזקה, תרבות עבודה מבוססת נתונים ושגרות מסודרות של איסוף, ניתוח ושימוש במידע לקבלת החלטות.',
+    recs:['שיתוף תובנות עם שותפים ומממנים באופן שיטתי','בחינת שימוש ב-AI לניתוח אוכלוסיות ותכנון תכניות','הובלת בנצ\'מרק מגזרי — שיתוף הידע עם ארגונים אחרים'],
+    peers:[[140,62],[162,45],[148,55],[170,38],[155,68]],
+    dd:[82,75,78,80,70], dad:[85,78,82,80,75,72] }
+};
+
+const DL = [
+  {n:'מערכות ניהול', tips:['פתחו רשימה של כל המערכות הקיימות בארגון','בחרו מערכת אחת שתהיה "אמת היחידה" לנתוני מוטבים','בדקו אם ניתן לבטל כלים כפולים ולחסוך']},
+  {n:'אינטגרציה בין מערכות', tips:['מפו אילו מערכות מחוברות ואילו עובדות בנפרד','בחרו ממשק אחד לחיבור (Zapier / Make / API פשוט)','התחילו עם חיבור אחד קטן ובדקו שעובד לפני שמרחיבים']},
+  {n:'אוטומציה ותהליכים', tips:['תעדו תהליך אחד שמתבצע ידנית כל שבוע','בדקו אם ניתן לאוטמט אותו עם כלים קיימים','מדדו כמה שעות חוסכים לאחר האוטומציה']},
+  {n:'שגרות עבודה דיגיטליות', tips:['הגדירו פרוטוקול ברירת מחדל לתיעוד פגישות','סגרו על כלי שיתוף פעולה אחד לכל הצוות','קבעו נוהל גיבוי תקופתי לקבצים חשובים']},
+  {n:'מדיניות AI', tips:['נסחו מסמך מדיניות שימוש ב-AI — עמוד אחד מספיק','הגדירו אילו נתוני מוטבים לא ייכנסו לכלי AI חיצוניים','שתפו את הצוות ואספו שאלות פתוחות בנושא']}
+];
+const DAL = [
+  {n:'כוונה וניתוח', tips:['שאלו: "למה אנחנו אוספים את הנתון הזה?" על כל שדה','הגדירו שאלה ניהולית אחת שדאטה אמורה לענות עליה','בדקו אם הניתוח הקיים מגיע להחלטות בפועל']},
+  {n:'תשתיות נתונים', tips:['מפו את כל מקורות הנתונים הקיימים בארגון','בדקו איכות: כמה % מהרשומות שלמות ועדכניות?','הגדירו "שדה מפתח" לזיהוי ייחודי של כל מוטב']},
+  {n:'שגרות איסוף', tips:['הגדירו מי אחראי לאיסוף כל סוג נתון','קבעו מועד עדכון קבוע — שבועי או חודשי','צרו טופס אחיד לאיסוף במקום פורמטים שונים לכל אחד']},
+  {n:'תרבות ארגונית', tips:['הכניסו נתון אחד לכל סדר יום ניהולי','שתפו "סיפור הצלחה" מבוסס נתונים פעם בחודש','עודדו שאלות כמו "מה הנתונים אומרים?" בדיונים']},
+  {n:'יכולות ומשאבים', tips:['מפו את רמת אוריינות הדאטה בצוות','בחרו עובד אחד שיעבור הכשרה ויהיה "שגריר נתונים"','הקצו 4 שעות חודשיות ייעודיות לעבודה עם נתונים']},
+  {n:'AI ואתיקה', tips:['בדקו אילו כלי AI כבר בשימוש בארגון (לרוב יש כבר)','הגדירו: אילו שימושים מותרים ואילו דורשים אישור מנהל','בנו תהליך פשוט לדיווח על בעיות פרטיות']}
+];
+
+function lvl(v){ return v<31?'בסיסי':v<70?'מתפתח':'מתקדם'; }
+function lvlCol(v){ return v<31?'#854F0B':v<70?'#185FA5':'#0F6E56'; }
+
+let openTip = null;
+
+function renderBars(elId, dims, vals, barCol){
+  const el = document.getElementById(elId);
+  el.innerHTML='';
+  dims.forEach((dim,i)=>{
+    const v = vals[i];
+    const tipId = `tip-${elId}-${i}`;
+    const row = document.createElement('div');
+    row.className='dim-row';
+    row.innerHTML=`
+      <div class="dim-row-inner">
+        <span class="dim-name">${dim.n}</span>
+        <div class="dim-track"><div class="dim-fill" style="background:${barCol};width:${v}%;"></div></div>
+        <span class="dim-pct" style="color:${lvlCol(v)};">${v}%</span>
+        <span id="arr-${tipId}" class="dim-arrow">▸</span>
+      </div>
+      <div id="${tipId}" class="dim-tip">
+        <p>המלצות לשיפור:</p>
+        <ul>${dim.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+      </div>`;
+    row.onclick=()=>{
+      const tip=document.getElementById(tipId);
+      const arr=document.getElementById('arr-'+tipId);
+      const isOpen=tip.style.display==='block';
+      if(openTip && openTip!==tipId){
+        const prev=document.getElementById(openTip);
+        if(prev) prev.style.display='none';
+        const prevArr=document.getElementById('arr-'+openTip);
+        if(prevArr) prevArr.textContent='▸';
+      }
+      tip.style.display=isOpen?'none':'block';
+      arr.textContent=isOpen?'▸':'▾';
+      openTip=isOpen?null:tipId;
+    };
+    el.appendChild(row);
+  });
+}
+
+function setQ(key){
+  const q=Q[key];
+  document.getElementById('ds').textContent=q.d+'%';
+  document.getElementById('das').textContent=q.da+'%';
+  document.getElementById('dl').textContent=lvl(q.d);
+  document.getElementById('dal').textContent=lvl(q.da);
+  document.getElementById('dpeer').textContent=q.dp+'%';
+  document.getElementById('dapeer').textContent=q.dap+'%';
+  document.getElementById('dbar-peer').style.width=q.dp+'%';
+  document.getElementById('dbar-you').style.left=q.d+'%';
+  document.getElementById('dabar-peer').style.width=q.dap+'%';
+  document.getElementById('dabar-you').style.left=q.da+'%';
+
+  document.getElementById('dot').setAttribute('cx',q.dotX);
+  document.getElementById('dot').setAttribute('cy',q.dotY);
+  document.getElementById('dot').setAttribute('fill',q.dotCol);
+  document.getElementById('dot-ring').setAttribute('cx',q.dotX);
+  document.getElementById('dot-ring').setAttribute('cy',q.dotY);
+  document.getElementById('dot-ring').setAttribute('stroke',q.dotCol);
+  document.getElementById('dot-label').setAttribute('x',q.dotX);
+  document.getElementById('dot-label').setAttribute('y',q.dotLabelY);
+  document.getElementById('dot-label').setAttribute('fill',q.dotCol);
+
+  document.getElementById('peer-dots').innerHTML=q.peers.map(([px,py])=>
+    `<circle cx="${px}" cy="${py}" r="3.5" fill="#888780" opacity="0.4"/>`
+  ).join('');
+
+  const badge=document.getElementById('qbadge');
+  badge.textContent=q.name; badge.style.background=q.bg; badge.style.color=q.col;
+  document.getElementById('qdesc').textContent=q.desc;
+  document.getElementById('recs').innerHTML=q.recs.map(r=>`<li>${r}</li>`).join('');
+
+  openTip=null;
+  renderBars('dig-bars',DL,q.dd,'#185FA5');
+  renderBars('dat-bars',DAL,q.dad,'#0F6E56');
+
+  ['ll','hl','lh','hh'].forEach(k=>{
+    const b=document.getElementById('btn-'+k);
+    if(b){b.style.background='';b.style.borderColor='';b.style.color='';}
+  });
+  const ab=document.getElementById('btn-'+key);
+  if(ab){ab.style.background=q.bg;ab.style.borderColor=q.col;ab.style.color=q.col;}
+}
+
+setQ('lh');
+</script>
+</body>
+</html>
