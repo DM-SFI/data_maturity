@@ -59,6 +59,18 @@
     @keyframes shimmer { 0% { transform: translateX(-100%);} 100% { transform: translateX(100%);} }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-30px);} to { opacity: 1; transform: translateY(0);} }
 
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .sfi-logo {
+      height: 50px;
+      width: auto;
+    }
+
     .header h1 {
       font-size: 2.5rem;
       font-weight: 800;
@@ -580,6 +592,10 @@
 <body>
   <div class="container">
     <div class="header">
+      <div class="header-top">
+        <div></div>
+        <img src="https://sfi.org.il/wp-content/uploads/2023/09/%D7%9C%D7%95%D7%92%D7%95-%D7%9E%D7%A2%D7%95%D7%93%D7%9B%D7%9F-2026.png" alt="SFI Logo" class="sfi-logo" />
+      </div>
       <h1>🎯 כלי אבחון בשלות דאטה ארגונית</h1>
       <p>כלי דיגיטלי לבדיקת רמת הבשלות של עבודה מבוססת נתונים ברשות המקומית</p>
     </div>
