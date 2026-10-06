@@ -188,7 +188,7 @@
 <div class="wrap">
   <div class="brandbar">
     <img src="https://sfi.org.il/wp-content/uploads/2023/09/%D7%9C%D7%95%D7%92%D7%95-%D7%9E%D7%A2%D7%95%D7%93%D7%9B%D7%9F-2026.png" alt="SFI">
-    <span class="tag">יחידת דאטה ומדידה</span>
+    <span class="tag">מחלקת דאטה ומדידה</span>
   </div>
 
   <div id="intro" class="card cover pad">
@@ -222,7 +222,7 @@
 
   <div id="results" class="card pad" style="display:none"></div>
 
-  <p class="foot">מצפן בשלות דאטה · פותח ביחידת הדאטה והמדידה של SFI · גרסת בטא v7. הדוח מבוסס על אבחון עצמי; מומלץ לעבור עליו עם ליווי מקצועי.</p>
+  <p class="foot">מצפן בשלות דאטה · פותח במחלקת דאטה ומדידה של SFI · גרסת בטא v7. הדוח מבוסס על אבחון עצמי; מומלץ לעבור עליו עם ליווי מקצועי.</p>
 </div>
 
 <script>
@@ -588,7 +588,7 @@ function showResults(){
     if(f.keep.length)h+=`<div class="fbl keep"><b>לשימור</b><ul>${f.keep.map(t=>`<li>${t}</li>`).join("")}</ul></div>`;
     if(f.fix.length)h+=`<div class="fbl fix"><b>לחיזוק</b><ul>${f.fix.map(t=>`<li>${t}</li>`).join("")}</ul></div>`;
     h+=`</div></div>`; });
-  h+=`<p class="secp" style="margin-top:22px">רוצים לעבור על התוצאות עם מישהו? צוות הדאטה והמדידה של SFI ישמח לעזור לכם להפוך את הדוח לתכנית עבודה.</p>`;
+  h+=`<p class="secp" style="margin-top:22px">רוצים לעבור על התוצאות עם מישהו? מחלקת דאטה ומדידה של SFI ישמח לעזור לכם להפוך את הדוח לתכנית עבודה.</p>`;
   h+=`<div class="nav noprint" style="justify-content:center;margin-top:26px"><button class="btn ghost" onclick="window.print()">שמירה / הדפסה</button><button class="btn ghost" onclick="location.reload()">מילוי מחדש</button></div>`;
   const r=$("#results"); r.innerHTML=h; r.style.display="block"; window.scrollTo({top:0,behavior:'smooth'});
 }
