@@ -176,6 +176,16 @@
   .dfbb{padding:14px 16px;font-size:14.5px;line-height:1.7;color:var(--ink-soft)}
   .dfbb p{margin:0 0 10px} .dfbb .about{font-size:13px;color:var(--muted)}
   .dfbh .lvbadge{background:#fff}
+  /* מטריצה משמאל לימין, צירים עם חצים גרפיים */
+  .matrix-wrap .maxis-y{writing-mode:horizontal-tb;transform:none;position:relative;width:30px;flex:0 0 30px;padding:0}
+  .matrix-wrap .maxis-y::before{content:"";position:absolute;left:14px;top:10px;bottom:0;width:2px;background:var(--muted)}
+  .matrix-wrap .maxis-y::after{content:"";position:absolute;left:9px;top:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid var(--muted)}
+  .matrix-wrap .maxis-y span{position:absolute;left:15px;top:50%;transform:translate(-50%,-50%) rotate(-90deg);white-space:nowrap;background:var(--card);padding:0 6px;direction:rtl}
+  .matrix-wrap .maxis-x{position:relative;height:22px;max-width:420px;margin:8px auto 0}
+  .matrix-wrap .maxis-x::before{content:"";position:absolute;top:10px;left:0;right:9px;height:2px;background:var(--muted)}
+  .matrix-wrap .maxis-x::after{content:"";position:absolute;top:5px;right:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid var(--muted)}
+  .matrix-wrap .maxis-x span{position:absolute;top:11px;left:50%;transform:translate(-50%,-50%);background:var(--card);padding:0 8px;direction:rtl;white-space:nowrap}
+  .matrix-wrap .dot{transform:translate(-50%,50%)}
   .fbl{border-inline-start:4px solid;border-radius:10px;padding:10px 14px;margin-top:10px}
   .fbl b{display:block;font-size:13.5px;margin-bottom:4px}
   .fbl ul{margin:0;padding-inline-start:18px} .fbl li{margin:3px 0}
@@ -561,10 +571,10 @@ function showResults(){
      <div class="sc dat"><div class="k">בשלות דאטה</div><div class="n">${Math.round(data)}<small>/100</small></div>${badge(data)}<p class="scx">שימוש בנתונים, איכות הנתונים, שגרות ותרבות</p></div></div>`;
   h+=`<div class="quad"><div class="qk">הפרופיל של הארגון</div><h3>${P.t}</h3><p>${P.x}</p></div>`;
   // מטריצה 3×3: עמודות = רמת דאטה (מימין לשמאל), שורות = רמת דיגיטל (מלמטה למעלה)
-  h+=`<div class="matrix-wrap"><div class="maxis-y">בשלות דיגיטלית ←</div><div style="flex:1"><div class="matrix">`;
+  h+=`<div class="matrix-wrap" dir="ltr"><div class="maxis-y"><span>בשלות דיגיטלית</span></div><div style="flex:1"><div class="matrix">`;
   for(let r=2;r>=0;r--)for(let c=0;c<=2;c++){const k=profileKey(r,c),live=(r===ld&&c===la);
     h+=`<div class="cell p-${k} ${live?'live':''}" style="grid-column:${c+1};grid-row:${3-r}">${PROFILES[k].t}</div>`;}
-  h+=`<div class="dot" style="right:${Math.min(97,Math.max(3,data))}%;bottom:${Math.min(97,Math.max(3,digital))}%"></div></div><div class="maxis-x">בשלות דאטה ←</div></div></div>`;
+  h+=`<div class="dot" style="left:${Math.min(97,Math.max(3,data))}%;bottom:${Math.min(97,Math.max(3,digital))}%"></div></div><div class="maxis-x"><span>בשלות דאטה</span></div></div></div>`;
   const aiUse=scoreQ(Q.find(x=>x.id==="q22")), sec=scoreQ(Q.find(x=>x.id==="q18"));
   if(aiUse!==null&&sec!==null&&aiUse>=60&&sec<50) h+=`<div class="flag">שימו לב: השימוש ב-AI בארגון מתקדם יחסית, אבל ההגנה על המידע עדיין חלשה. לפני שמרחיבים את השימוש ב-AI, כדאי לחזק את אבטחת המידע, במיוחד של מידע אישי על מוטבים.</div>`;
   // מאיפה להתחיל: שלושת הממדים החלשים (לא מתקדמים), משקל גבוה קודם בשוויון
