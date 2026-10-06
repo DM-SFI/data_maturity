@@ -306,7 +306,7 @@ const CH={
  cult:{t:"הנהלה, תרבות ואחריות",d:"לסיום, כמה שאלות על היחס לנתונים בארגון ועל האחריות לניהולם."}
 };
 const CHORDER=Object.keys(CH);
-const NEG=["לא יודע","לא יודע-ת","לא רלוונטי","אף אחד","לא העביר","לא בוצע"];
+const NEG=["לא יודע","לא יודע-ת","לא רלוונטי","אף אחד","לא העביר","לא בוצע","לא התקיימו"];
 function isNeg(t){return NEG.some(n=>String(t).includes(n));}
 /* משוב לפריטים:
    fb:{lo,hi}         — לפי ציון השאלה (lo מתחת ל-loAt, ברירת מחדל 50; hi מ-75)
@@ -493,7 +493,9 @@ function setSingle(q,i){ans[q]=i;render();}
 function setYN(q,v){ans[q]=v;render();}
 function setPct(q,v){ans[q]=v===''?undefined:Math.max(0,Math.min(100,+v));}
 function setPctNA(q,na){ans[q]=na?'na':undefined;render();}
-function toggle(q,i){const a=ans[q]||[];const k=a.indexOf(i);k>=0?a.splice(k,1):a.push(i);ans[q]=a;render();}
+function toggle(q,i){const opts=Q.find(x=>x.id===q).options;let a=ans[q]||[];const k=a.indexOf(i);
+  if(k>=0)a.splice(k,1); else if(isNeg(opts[i]))a=[i]; else{a=a.filter(j=>!isNeg(opts[j]));a.push(i);}  // "אף אחד/לא התקיימו" בלעדי
+  ans[q]=a;render();}
 function setScale(q,idx,v){ if(idx===null)ans[q]=v; else{if(!ans[q])ans[q]={};ans[q][idx]=v;} render(); }
 function back(){ if(cur>0){cur--; while(cur>0&&skipped(Q[cur]))cur--; render();window.scrollTo({top:0,behavior:'smooth'});} }
 function next(){ let n=cur+1; while(n<Q.length&&skipped(Q[n]))n++; if(n<Q.length){cur=n;render();window.scrollTo({top:0,behavior:'smooth'});} else showResults(); }
